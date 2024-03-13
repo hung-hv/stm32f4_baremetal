@@ -27,11 +27,14 @@
 /*
  * Base address of all peripherals hanging on APB1 bus
  */
+#define SPI2_BASEADDR		(APB1_BASEADDR + 0x3800)
+#define SPI3_BASEADDR		(APB1_BASEADDR + 0x3C00)
 
 /*
  * Base address of all peripherals hanging on APB2 bus
  */
-
+#define SPI1_BASEADDR		(APB2_BASEADDR + 0x3000)
+#define SPI4_BASEADDR		(APB2_BASEADDR + 0x3400)
 
 /*
  * Base address of all peripherals hanging on AHB1 bus
@@ -101,6 +104,31 @@ typedef struct {
 } RCC_RegDef_t;
 
 #define RCC ((RCC_RegDef_t*)RCC_BASEADDR)
+
+
+
+/*
+ * peripheral register definition structure for SPI
+ */
+
+typedef struct {
+	__vo uint32_t CR1;		/* Control 1*/			/*offset = 0x00*/
+	__vo uint32_t CR2;		/* Control 2*/			/*offset = 0x04*/
+	__vo uint32_t SR;		/* Status */			/*offset = 0x08*/
+	__vo uint32_t DR;		/* Data */				/*offset = 0x0C*/
+	__vo uint32_t CRCPR;	/* CRC polynomial */	/*offset = 0x10*/
+	__vo uint32_t RXCRCR;	/* RX CRC */			/*offset = 0x14*/
+	__vo uint32_t TXCRCR;	/* TX CRC */			/*offset = 0x10*/
+	__vo uint32_t I2SCFGR;	/* I2S config */		/*offset = 0x14*/
+	__vo uint32_t I2SPR;	/* I2S prescale */		/*offset = 0x14*/
+} SPI_RegDef_t;
+
+#define SPI1 ((SPI_RegDef_t*)SPI1_BASEADDR)
+#define SPI2 ((SPI_RegDef_t*)SPI2_BASEADDR)
+
+/*Clock enable macro for SPIx*/
+#define SPI1_PCLK_EN()	(RCC->APB1ENR |= 1 << 14)
+#define SPI2_PCLK_EN()	(RCC->APB2ENR |= 1 << 12)
 
 /*
  * Clock Enable for GPIOx
