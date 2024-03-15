@@ -42,6 +42,8 @@
 #define GPIOA_BASEADDR		(AHB1_BASEADDR + 0x0000)
 #define GPIOB_BASEADDR		(AHB1_BASEADDR + 0x0400)
 #define GPIOC_BASEADDR		(AHB1_BASEADDR + 0x0800)
+#define GPIOD_BASEADDR		(AHB1_BASEADDR + 0x0C00)
+#define GPIOE_BASEADDR		(AHB1_BASEADDR + 0x1000)
 
 #define RCC_BASEADDR		(AHB1_BASEADDR + 0x3800)
 
@@ -130,7 +132,7 @@ typedef struct {
 #define SPI1 ((SPI_RegDef_t*)SPI1_BASEADDR)
 #define SPI2 ((SPI_RegDef_t*)SPI2_BASEADDR)
 
-/*Clock enable macro for SPIx*/
+/*Clock Enable for SPIx*/
 #define SPI1_PCLK_EN()	(RCC->APB1ENR |= 1 << 14)
 #define SPI2_PCLK_EN()	(RCC->APB2ENR |= 1 << 12)
 
@@ -138,10 +140,31 @@ typedef struct {
  * Clock Enable for GPIOx
  */
 #define GPIOA_PCLK_EN()	(RCC->AHB1ENR |= (1 << 0))	/* GPIOA Peripheral clock Enable*/
+#define GPIOB_PCLK_EN()	(RCC->AHB1ENR |= (1 << 1))	/* GPIOB Peripheral clock Enable*/
+#define GPIOC_PCLK_EN()	(RCC->AHB1ENR |= (1 << 2))	/* GPIOC Peripheral clock Enable*/
+#define GPIOD_PCLK_EN()	(RCC->AHB1ENR |= (1 << 3))	/* GPIOD Peripheral clock Enable*/
+#define GPIOE_PCLK_EN()	(RCC->AHB1ENR |= (1 << 4))	/* GPIOE Peripheral clock Enable*/
+
+/*
+ * Reset GPIOx
+ */
+#define GPIOA_REG_RESET()	do { (RCC->AHB1RSTR |= (1 << 0)); (RCC->AHB1RSTR &= ~(1 << 0)); } while(0)	/* GPIOA Peripheral register reset*/
+#define GPIOB_REG_RESET()	do { (RCC->AHB1RSTR |= (1 << 1)); (RCC->AHB1RSTR &= ~(1 << 1)); } while(0)	/* GPIOB Peripheral register reset*/
+#define GPIOC_REG_RESET()	do { (RCC->AHB1RSTR |= (1 << 2)); (RCC->AHB1RSTR &= ~(1 << 2)); } while(0)	/* GPIOC Peripheral register reset*/
+#define GPIOD_REG_RESET()	do { (RCC->AHB1RSTR |= (1 << 3)); (RCC->AHB1RSTR &= ~(1 << 3)); } while(0)	/* GPIOD Peripheral register reset*/
+#define GPIOE_REG_RESET()	do { (RCC->AHB1RSTR |= (1 << 4)); (RCC->AHB1RSTR &= ~(1 << 4)); } while(0)	/* GPIOE Peripheral register reset*/
 
 /*
  * Clock Disable for GPIOx
  */
 #define GPIOA_PCLK_DI()	(RCC->AHB1ENR &= ~(1 << 0))	/* GPIOA Peripheral clock Disable*/
+
+/*
+ * General macro
+ */
+#define ENABLE		1
+#define DISABLE		0
+#define GPIO_PIN_SET		1
+#define GPIO_PIN_RESET		0
 
 #endif /* INC_STM32F411XX_H_ */
