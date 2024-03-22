@@ -95,7 +95,7 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx);
 uint8_t GPIO_ReadInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
 uint16_t GPIO_ReadInputPort(GPIO_RegDef_t *pGPIOx);
 void GPIO_WriteOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t value);
-void GPIO_WriteOutputPort(GPIO_RegDef_t *pGPIOx, uint8_t value);
+void GPIO_WriteOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t value);
 void GPIO_TogglePin(GPIO_RegDef_t *pGPIO, uint8_t PinNumber);
 
 

@@ -5,16 +5,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../drivers/src/stm32f411xx_SPI_deiver.c \
-../drivers/src/stm32f411xx_gpio_driver.c 
+../drivers/src/stm32f411xx_GPIO_driver.c \
+../drivers/src/stm32f411xx_SPI_driver.c 
 
 OBJS += \
-./drivers/src/stm32f411xx_SPI_deiver.o \
-./drivers/src/stm32f411xx_gpio_driver.o 
+./drivers/src/stm32f411xx_GPIO_driver.o \
+./drivers/src/stm32f411xx_SPI_driver.o 
 
 C_DEPS += \
-./drivers/src/stm32f411xx_SPI_deiver.d \
-./drivers/src/stm32f411xx_gpio_driver.d 
+./drivers/src/stm32f411xx_GPIO_driver.d \
+./drivers/src/stm32f411xx_SPI_driver.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -24,7 +24,7 @@ drivers/src/%.o drivers/src/%.su drivers/src/%.cyclo: ../drivers/src/%.c drivers
 clean: clean-drivers-2f-src
 
 clean-drivers-2f-src:
-	-$(RM) ./drivers/src/stm32f411xx_SPI_deiver.cyclo ./drivers/src/stm32f411xx_SPI_deiver.d ./drivers/src/stm32f411xx_SPI_deiver.o ./drivers/src/stm32f411xx_SPI_deiver.su ./drivers/src/stm32f411xx_gpio_driver.cyclo ./drivers/src/stm32f411xx_gpio_driver.d ./drivers/src/stm32f411xx_gpio_driver.o ./drivers/src/stm32f411xx_gpio_driver.su
+	-$(RM) ./drivers/src/stm32f411xx_GPIO_driver.cyclo ./drivers/src/stm32f411xx_GPIO_driver.d ./drivers/src/stm32f411xx_GPIO_driver.o ./drivers/src/stm32f411xx_GPIO_driver.su ./drivers/src/stm32f411xx_SPI_driver.cyclo ./drivers/src/stm32f411xx_SPI_driver.d ./drivers/src/stm32f411xx_SPI_driver.o ./drivers/src/stm32f411xx_SPI_driver.su
 
 .PHONY: clean-drivers-2f-src
 

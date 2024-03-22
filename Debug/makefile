@@ -9,7 +9,7 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include drivers/Src/subdir.mk
+-include drivers/src/subdir.mk
 -include Startup/subdir.mk
 -include Src/subdir.mk
 -include objects.mk
@@ -60,8 +60,8 @@ all: main-build
 main-build: stm32f411_drivers.elf secondary-outputs
 
 # Tool invocations
-stm32f411_drivers.elf stm32f411_drivers.map: $(OBJS) $(USER_OBJS) C:\Users\HAU5HC\STM32CubeIDE\workspace_1.13.0\stm32f411_drivers\STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "stm32f411_drivers.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\HAU5HC\STM32CubeIDE\workspace_1.13.0\stm32f411_drivers\STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f411_drivers.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+stm32f411_drivers.elf stm32f411_drivers.map: $(OBJS) $(USER_OBJS) C:\Users\vieth\Documents\stm32\stm32_baremetal\stm32f4_baremetal\STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "stm32f411_drivers.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\vieth\Documents\stm32\stm32_baremetal\stm32f4_baremetal\STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f411_drivers.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

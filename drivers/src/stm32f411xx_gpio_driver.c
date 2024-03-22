@@ -119,7 +119,7 @@ void GPIO_WriteOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t value){
 	pGPIOx->ODR |= (value);
 
 }
-void GPIO_TogglePin(GPIO_RegDef_t *pGPIO, uint8_t PinNumber){
+void GPIO_TogglePin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber){
 	pGPIOx->ODR ^= ( 1 << PinNumber);
 }
 
