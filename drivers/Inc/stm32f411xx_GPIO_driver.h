@@ -15,7 +15,7 @@
  */
 typedef struct {
 	uint8_t GPIO_PinNumber;
-	uint8_t GPIO_PinMode;
+	uint8_t GPIO_PinMode;		/* @GPIO mode */
 	uint8_t GPIO_PinSpeed;
 	uint8_t GPIO_PinPuPdCtrl;
 	uint8_t GPIO_PinOutputType;
@@ -51,7 +51,7 @@ typedef struct {
 #define GPIO_PIN_NO_15		15
 
 /*
- * GPIO mode
+ * @GPIO mode
  */
 #define GPIO_MODE_IN		0
 #define GPIO_MODE_OUT		1

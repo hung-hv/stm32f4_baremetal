@@ -36,8 +36,11 @@
 /*
  * Base address of all peripherals hanging on APB2 bus
  */
+
 #define SPI1_BASEADDR		(APB2_BASEADDR + 0x3000)
 #define SPI4_BASEADDR		(APB2_BASEADDR + 0x3400)
+#define SYSCFG_BASEADDR		(APB2_BASEADDR + 0x3800)
+#define EXTI_BASEADDR		(APB2_BASEADDR + 0x3C00)
 
 /*
  * Base address of all peripherals hanging on AHB1 bus
@@ -178,6 +181,50 @@ typedef struct {
 #define SPI_SR_BSY		7
 #define SPI_SR_FRE		8
 
+/********************************************************************/
+/* EXTI */
+/********************************************************************/
+
+/*
+ * peripheral Register Definition structure for EXTI
+ */
+typedef struct {
+	__vo uint32_t IMR;		/* Interrupt mask register */				/*offset = 0x00*/
+	__vo uint32_t EMR;		/* Event mask register */					/*offset = 0x04*/
+	__vo uint32_t RTSR;		/* Rising trigger selection register */		/*offset = 0x08*/
+	__vo uint32_t FTSR;		/* Falling trigger selection register */	/*offset = 0x0C*/
+	__vo uint32_t SWIER;	/* Software interrupt event register */		/*offset = 0x10*/
+	__vo uint32_t PR;		/* Pending register */						/*offset = 0x14*/
+} EXTI_RegDef_t;
+
+#define EXTI	((EXTI_RegDef_t*)EXTI_BASEADDR)
+
+
+/********************************************************************/
+/* End of EXTI */
+/********************************************************************/
+
+/********************************************************************/
+/* SYSCFG */
+/********************************************************************/
+
+/*
+ * peripheral Register Definition structure for EXTI
+ */
+typedef struct {
+	__vo uint32_t MEMRMP;		/* memory re-map register */						/*offset = 0x00*/
+	__vo uint32_t PMC;			/* peripheral mode configuration register */		/*offset = 0x04*/
+	__vo uint32_t EXTICRx[4];	/* external interrupt configuration register 1:4 */	/*offset = 0x08 - 0x14*/
+	uint32_t	RESERVED;															/*offset = 0x18*/
+	__vo uint32_t CMPCR;		/* cell control register */							/*offset = 0x20*/
+} SYSCFG_RegDef_t;
+
+#define SYSCFG	((SYSCFG_RegDef_t*)SYSCFG_BASEADDR)
+
+
+/********************************************************************/
+/* End of SYSCFG */
+/********************************************************************/
 
 /*
  * Clock Enable for GPIOx

@@ -42,6 +42,35 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandler) {
 
 	} else {
 		/*interrupt mode*/
+		if ( pGPIOHandler->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_FT) {
+			/* Configuration for Falling Edge IT */
+			/* 1. Enable EXTI_FTSR */
+			EXTI->FTSR |= (pGPIOHandler->GPIO_PinConfig->GPIO_PinNumber);
+			/* 2. Clear the corresponding RTSR */
+			EXTI->RTSR &= ~(pGPIOHandler->GPIO_PinConfig->GPIO_PinNumber);
+
+		} else if (pGPIOHandler->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT ) {
+			/* Configuration for Rising Edge IT*/
+			/* 1. Enable EXTI_RTSR */
+			EXTI->RTSR |= (pGPIOHandler->GPIO_PinConfig->GPIO_PinNumber);
+			/* 2. Clear the corresponding FTSR */
+			EXTI->FTSR &= ~(pGPIOHandler->GPIO_PinConfig->GPIO_PinNumber);
+
+		} else if (pGPIOHandler->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RFT ) {
+			/* Configuration for Rising and Falling Edge IT*/
+			/* 1. Enable EXTI_RTSR */
+			EXTI->RTSR |= (pGPIOHandler->GPIO_PinConfig->GPIO_PinNumber);
+			/* 2. Enable EXTI_FTSR */
+			EXTI->FTSR |= (pGPIOHandler->GPIO_PinConfig->GPIO_PinNumber);
+		}
+
+		/* 2. Configure the GPIO port Selection in SYSCFG_EXTICR */
+
+		/* 3. Enable EXTI interrupt delivery using IMR
+		 * *only un-mask the corresponding interrupt line
+		 */
+		EXTI->IMR |= pGPIOHandler->GPIO_PinConfig->GPIO_PinNumber;
+
 	}
 	temp = 0;
 

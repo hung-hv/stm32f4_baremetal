@@ -2,5 +2,3 @@
 "./Src/syscalls.o"
 "./Src/sysmem.o"
 "./Startup/startup_stm32f411vetx.o"
-"./drivers/src/stm32f411xx_GPIO_driver.o"
-"./drivers/src/stm32f411xx_SPI_driver.o"
