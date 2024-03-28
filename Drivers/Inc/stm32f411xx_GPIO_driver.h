@@ -14,12 +14,12 @@
  * Configuration for GPIO Pin
  */
 typedef struct {
-	uint8_t GPIO_PinNumber;
-	uint8_t GPIO_PinMode;		/* @GPIO mode */
-	uint8_t GPIO_PinSpeed;
-	uint8_t GPIO_PinPuPdCtrl;
-	uint8_t GPIO_PinOutputType;
-	uint8_t GPIO_PinAltFuncMode;
+	uint8_t GPIO_PinNumber;			/* @GPIO mode */
+	uint8_t GPIO_PinMode;			/* @GPIO mode */
+	uint8_t GPIO_PinSpeed;			/* @GPIO mode */
+	uint8_t GPIO_PinPuPdCtrl;		/* @GPIO mode */
+	uint8_t GPIO_PinOutputType;		/* @GPIO mode */
+	uint8_t GPIO_PinAltFuncMode; 	/* @GPIO Alternate Function */
 }GPIO_PinConf_t;
 
 /*
@@ -82,6 +82,18 @@ typedef struct {
 #define GPIO_NO_PU_PD		0
 #define GPIO_PIN_PU			1
 #define GPIO_PIN_PD			2
+
+/*
+ * @GPIO Alternate Function
+ */
+#define GPIO_ALTFUNC_0		0
+#define GPIO_ALTFUNC_1		1
+#define GPIO_ALTFUNC_2		2
+#define GPIO_ALTFUNC_3		3
+#define GPIO_ALTFUNC_4		4
+#define GPIO_ALTFUNC_5		5
+#define GPIO_ALTFUNC_6		6
+#define GPIO_ALTFUNC_7		7
 
 /*
  * APIs supported by this driver

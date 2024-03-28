@@ -46,23 +46,23 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandler) {
 		if ( pGPIOHandler->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_FT) {
 			/* Configuration for Falling Edge IT */
 			/* 1. Enable EXTI_FTSR */
-			EXTI->FTSR |= (pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->FTSR |= (1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
 			/* 2. Clear the corresponding RTSR */
-			EXTI->RTSR &= ~(pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->RTSR &= ~(1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
 
 		} else if (pGPIOHandler->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT ) {
 			/* Configuration for Rising Edge IT*/
 			/* 1. Enable EXTI_RTSR */
-			EXTI->RTSR |= (pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->RTSR |= (1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
 			/* 2. Clear the corresponding FTSR */
-			EXTI->FTSR &= ~(pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->FTSR &= ~(1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
 
 		} else if (pGPIOHandler->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RFT ) {
 			/* Configuration for Rising and Falling Edge IT*/
 			/* 1. Enable EXTI_RTSR */
-			EXTI->RTSR |= (pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->RTSR |= (1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
 			/* 2. Enable EXTI_FTSR */
-			EXTI->FTSR |= (pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->FTSR |= (1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
 		}
 
 		/* 2. Configure the GPIO port Selection in SYSCFG_EXTICR */
@@ -77,7 +77,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandler) {
 		/* 3. Enable EXTI interrupt delivery using IMR by un-masking bit
 		 * *only un-mask the corresponding interrupt line
 		 */
-		EXTI->IMR |= pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber;
+		EXTI->IMR |= 1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber;
 
 	}
 	temp = 0;
@@ -189,7 +189,9 @@ void GPIO_IRQ_PRIO_Config(uint8_t IRQNumber, uint8_t IRQPriority) {
 
 	reg_index = IRQNumber / 4;
 	reg_order = IRQNumber % 4;
+	/* clear bit first */
 	*( NVIC_IPR_BASEADDR + reg_index ) &= ~( 0xF << (reg_order*8 + 4) );
+	/* then set bit */
 	*( NVIC_IPR_BASEADDR + reg_index ) |= ( IRQPriority << (reg_order*8 + 4) );
 }
 

@@ -2,6 +2,7 @@
 "./Drivers/Src/stm32f411xx_SPI_driver.o"
 "./Drivers/Src/stm32f4xx_I2C_driver.o"
 "./Src/main.o"
+"./Src/spi.o"
 "./Src/syscalls.o"
 "./Src/sysmem.o"
 "./Startup/startup_stm32f411ceux.o"

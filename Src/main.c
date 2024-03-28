@@ -54,27 +54,28 @@ int main(void)
 
 	GPIO_BTN.pGPIO = GPIOA;
 	GPIO_BTN.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_0;
-	GPIO_BTN.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_RT;
+	GPIO_BTN.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_FT;
 	GPIO_BTN.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
 	GPIO_BTN.GPIO_PinConfig.GPIO_PinPuPdCtrl = GPIO_PIN_PU;		/* pull-up*/
-	GPIO_BTN.GPIO_PinConfig.GPIO_PinOutputType = GPIO_OUT_PUSHPULL;
+//	GPIO_BTN.GPIO_PinConfig.GPIO_PinOutputType = GPIO_OUT_PUSHPULL;
 
 	GPIO_PeriClockCtrl(GPIO_BTN.pGPIO, ENABLE);
 	GPIO_Init(&GPIO_BTN);
 	/*interrupt configure*/
-	GPIO_IRQ_ISR_Config(IRQ_NO_EXTI0, ENABLE);
 	GPIO_IRQ_PRIO_Config(IRQ_NO_EXTI0, IRQ_PRIO_3);
+	GPIO_IRQ_ISR_Config(IRQ_NO_EXTI0, ENABLE);
+
     /* Loop forever */
 //	for(;;);
 //	uint8_t btn_status = 1;
 	while(1) {
-		GPIO_TogglePin(GPIO_LED.pGPIO, GPIO_LED.GPIO_PinConfig.GPIO_PinNumber);
-		if ( !GPIO_ReadInputPin(GPIO_BTN.pGPIO, GPIO_PIN_NO_0) ) {
-			/*press down*/
-			delay();
-			btn_status = -btn_status;
-
-		}
+//		GPIO_TogglePin(GPIO_LED.pGPIO, GPIO_LED.GPIO_PinConfig.GPIO_PinNumber);
+//		if ( !GPIO_ReadInputPin(GPIO_BTN.pGPIO, GPIO_PIN_NO_0) ) {
+//			/*press down*/
+//			delay();
+//			btn_status = -btn_status;
+//
+//		}
 
 		if ( btn_status == 1 ) {
 			GPIO_WriteOutputPin(GPIO_LED.pGPIO, GPIO_PIN_NO_13, GPIO_PIN_SET);
