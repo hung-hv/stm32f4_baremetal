@@ -15,7 +15,7 @@
 
 typedef struct {
 	uint8_t SPI_DeviceMode;		/* @SPI_DeviceMode */
-	uint8_t SPI_BusConfig;		/* SPI_BusConfig */
+	uint8_t SPI_BusConfig;		/* @SPI_BusConfig */
 	uint8_t SPI_ClkSpeed;
 	uint8_t SPI_DFF;				/* data frame format */
 	uint8_t SPI_CPOL;			/* */
@@ -87,6 +87,10 @@ typedef struct {
 #define	SPI_SSM_DIS			0
 #define	SPI_SSM_EN			1
 
+/*
+ * SPI CONTROL REGISTER 1 flag
+ */
+#define	SPI_CR1_SPE_FLAG		(1 << SPI_CR1_SPE)
 
 /*
  * SPI STATUS REGISTER flag
@@ -131,6 +135,8 @@ uint8_t SPI_Transmit_IT(SPI_Handle_t *pSPIhandle, uint8_t *pTxBuffer, uint32_t l
 uint8_t SPI_Receive_IT(SPI_Handle_t *pSPIhandle, uint8_t *pRxBuffer, uint32_t len);
 
 void SPI_ISR_Handler(SPI_Handle_t *pSPIhandle);
+
+void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t state);
 
 /*
  *	Application Callback

@@ -1,0 +1,2 @@
+../Src/spi.c:28:6:SPI1_Init	56	static
+../Src/spi.c:72:6:SPI2_Init	56	static

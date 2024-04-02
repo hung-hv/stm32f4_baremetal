@@ -1,0 +1,2 @@
+../Src/spi.c:28:6:SPI1_Init	1
+../Src/spi.c:72:6:SPI2_Init	1

@@ -29,6 +29,9 @@ void SPI_PeriClockCtrl(SPI_RegDef_t *pSPIx, uint8_t state){
 void SPI_Init(SPI_Handle_t *pSPIHandle) {
 	uint32_t temp_reg = 0;
 
+	/* 0. Enable SPI peripheral clock */
+	SPI_PeriClockCtrl(pSPIHandle->SPIx, ENABLE);
+
 	/* 1. Configuration the device mode */
 	temp_reg |= pSPIHandle->SPIConfig.SPI_DeviceMode << 2;
 
@@ -48,21 +51,26 @@ void SPI_Init(SPI_Handle_t *pSPIHandle) {
 	}
 
 	/* 3. SPI clock speed */
-	temp_reg = pSPIHandle->SPIConfig.SPI_ClkSpeed << 3;
+	temp_reg |= pSPIHandle->SPIConfig.SPI_ClkSpeed << 3;
 
 	/* 4. Data frame format */
-	temp_reg = pSPIHandle->SPIConfig.SPI_DFF << 11;
+	temp_reg |= pSPIHandle->SPIConfig.SPI_DFF << 11;
 
 	/* 5. config CPOL */
-	temp_reg = pSPIHandle->SPIConfig.SPI_CPOL << 1;
+	temp_reg |= pSPIHandle->SPIConfig.SPI_CPOL << 1;
 
 	/* 6. config CPHA */
-	temp_reg = pSPIHandle->SPIConfig.SPI_CPHA << 0;
+	temp_reg |= pSPIHandle->SPIConfig.SPI_CPHA << 0;
 
 	/* 7. config SSM  */
-	temp_reg = pSPIHandle->SPIConfig.SPI_SSM << 9;
+	temp_reg |= pSPIHandle->SPIConfig.SPI_SSM << 9;
 
+	//for dummy
+	temp_reg |= 1 << 8;
 
+	pSPIHandle->SPIx->CR2 &= ~(1 << 2 );
+
+	pSPIHandle->SPIx->CR1 = temp_reg;
 
 }
 void SPI_DeInit(SPI_RegDef_t *pSPIx);
@@ -84,10 +92,14 @@ uint8_t SPI_Transmit(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t len) {
 			(uint16_t*)pTxBuffer++;
 		} else {
 			/* 8 bit frame */
-			pSPIx->DR = *((uint8_t*)pTxBuffer);
+			*(volatile uint8_t *)&pSPIx->DR = *pTxBuffer;
+
+			uint8_t dummy_rx = *(volatile uint8_t *)&pSPIx->DR;
 			len--;
 			pTxBuffer++;
 		}
+//		pSPIx->CR1
+		while (pSPIx->SR & SPI_SR_BSY); // Wait until the transmission is complete
 	}
 }
 
@@ -105,7 +117,7 @@ uint8_t SPI_Receive(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t len) {
 				(uint16_t*)pRxBuffer++;
 			} else {
 				/* 8 bit frame */
-				*pRxBuffer = pSPIx->DR;
+				*pRxBuffer = *(volatile uint8_t *)&pSPIx->DR;
 				len--;
 				pRxBuffer++;
 			}
@@ -113,7 +125,7 @@ uint8_t SPI_Receive(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t len) {
 }
 
 uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t Flag) {
-	if( (pSPIx->SR & Flag) ==  FLAG_SET) {
+	if( (pSPIx->SR & Flag)) {
 		return FLAG_SET;
 	} else {
 		return FLAG_CLEAR;
@@ -253,6 +265,14 @@ static void SPI_OVR_isr_handler(SPI_Handle_t *pSPIhandle) {
 	(void) temp;
 	SPI_ApplicationEventCallback(pSPIhandle, SPI_EVENT_OVR_ERR);
 
+}
+
+void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t state) {
+	if (state == ENABLE) {
+		pSPIx->CR1 |= ( 1 << SPI_CR1_SPE);
+	} else {
+		pSPIx->CR1 &= ~( 1 << SPI_CR1_SPE);
+	}
 }
 
 __attribute__((weak)) void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIhandle, uint8_t event) {

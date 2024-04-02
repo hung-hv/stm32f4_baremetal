@@ -164,8 +164,8 @@ typedef struct {
 #define SPI2 ((SPI_RegDef_t*)SPI2_BASEADDR)
 
 /*Clock Enable for SPIx*/
-#define SPI1_PCLK_EN()	(RCC->APB1ENR |= 1 << 14)
-#define SPI2_PCLK_EN()	(RCC->APB2ENR |= 1 << 12)
+#define SPI1_PCLK_EN()	(RCC->APB2ENR |= 1 << 12)
+#define SPI2_PCLK_EN()	(RCC->APB1ENR |= 1 << 14)
 
 /*
  *	Bit Position of SPI_CR1
@@ -176,7 +176,7 @@ typedef struct {
 #define SPI_CR1_UDR		3
 #define SPI_CR1_CRCERR	4
 #define SPI_CR1_MODF		5
-#define SPI_CR1_OVR		6
+#define SPI_CR1_SPE		6
 #define SPI_CR1_BSY		7
 #define SPI_CR1_DFF		11
 
