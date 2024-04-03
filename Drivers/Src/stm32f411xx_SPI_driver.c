@@ -27,50 +27,53 @@ void SPI_PeriClockCtrl(SPI_RegDef_t *pSPIx, uint8_t state){
 }
 
 void SPI_Init(SPI_Handle_t *pSPIHandle) {
-	uint32_t temp_reg = 0;
+//	uint32_t temp_reg = 0;
 
 	/* 0. Enable SPI peripheral clock */
 	SPI_PeriClockCtrl(pSPIHandle->SPIx, ENABLE);
 
 	/* 1. Configuration the device mode */
-	temp_reg |= pSPIHandle->SPIConfig.SPI_DeviceMode << 2;
+	pSPIHandle->SPIx->CR1 |= (pSPIHandle->SPIConfig.SPI_DeviceMode << 2);
 
 	/* 2. Bus config */
 	if (pSPIHandle->SPIConfig.SPI_BusConfig == SPI_BUS_FDUPLEX) {
 
-		temp_reg &= ~(1 << 15);
+		pSPIHandle->SPIx->CR1 &= ~(1 << 15);
 
 	} else if (pSPIHandle->SPIConfig.SPI_BusConfig == SPI_BUS_HDUPLEX) {
 
-		temp_reg |= (1 << 15);
+		pSPIHandle->SPIx->CR1 |= (1 << 15);
 
 	} else if (pSPIHandle->SPIConfig.SPI_BusConfig == SPI_BUS_SIMPLEX_RX) {
 
-		temp_reg &= ~(1 << 15);
-		temp_reg |= (1 << 10);
+		pSPIHandle->SPIx->CR1 &= ~(1 << 15);
+		pSPIHandle->SPIx->CR1 |= (1 << 10);
 	}
 
 	/* 3. SPI clock speed */
-	temp_reg |= pSPIHandle->SPIConfig.SPI_ClkSpeed << 3;
+	pSPIHandle->SPIx->CR1 |= (pSPIHandle->SPIConfig.SPI_ClkSpeed << 3);
 
 	/* 4. Data frame format */
-	temp_reg |= pSPIHandle->SPIConfig.SPI_DFF << 11;
+	pSPIHandle->SPIx->CR1 |= (pSPIHandle->SPIConfig.SPI_DFF << 11);
 
 	/* 5. config CPOL */
-	temp_reg |= pSPIHandle->SPIConfig.SPI_CPOL << 1;
+	pSPIHandle->SPIx->CR1 |= (pSPIHandle->SPIConfig.SPI_CPOL << 1);
 
 	/* 6. config CPHA */
-	temp_reg |= pSPIHandle->SPIConfig.SPI_CPHA << 0;
+	pSPIHandle->SPIx->CR1 |= (pSPIHandle->SPIConfig.SPI_CPHA << 0);
 
 	/* 7. config SSM  */
-	temp_reg |= pSPIHandle->SPIConfig.SPI_SSM << 9;
+	pSPIHandle->SPIx->CR1 |= (pSPIHandle->SPIConfig.SPI_SSM << 9);
+
+	/* 8. pulled SSI to 1  */
+	pSPIHandle->SPIx->CR1 |= (1 << 8);
 
 	//for dummy
-	temp_reg |= 1 << 8;
+//	temp_reg |= 1 << 8;
 
-	pSPIHandle->SPIx->CR2 &= ~(1 << 2 );
+//	pSPIHandle->SPIx->CR2 &= ~(1 << 2 );
 
-	pSPIHandle->SPIx->CR1 = temp_reg;
+//	pSPIHandle->SPIx->CR1 = temp_reg;
 
 }
 void SPI_DeInit(SPI_RegDef_t *pSPIx);
@@ -92,14 +95,14 @@ uint8_t SPI_Transmit(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t len) {
 			(uint16_t*)pTxBuffer++;
 		} else {
 			/* 8 bit frame */
-			*(volatile uint8_t *)&pSPIx->DR = *pTxBuffer;
+			*((volatile uint8_t *)&pSPIx->DR) = *pTxBuffer;
 
-			uint8_t dummy_rx = *(volatile uint8_t *)&pSPIx->DR;
+//			uint8_t dummy_rx = *(volatile uint8_t *)&pSPIx->DR;
 			len--;
 			pTxBuffer++;
 		}
 //		pSPIx->CR1
-		while (pSPIx->SR & SPI_SR_BSY); // Wait until the transmission is complete
+		while ( pSPIx->SR & ( 1 << SPI_SR_BSY ) ); // Wait until the transmission is complete
 	}
 }
 

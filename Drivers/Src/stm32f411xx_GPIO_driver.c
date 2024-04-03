@@ -80,7 +80,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandler) {
 		/* 3. Enable EXTI interrupt delivery using IMR by un-masking bit
 		 * *only un-mask the corresponding interrupt line
 		 */
-		EXTI->IMR |= 1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber;
+		EXTI->IMR |= (1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
 
 	}
 	temp = 0;

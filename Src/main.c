@@ -32,7 +32,7 @@
 
 int8_t btn_status = 1;
 
-uint8_t tx_buffer[3] = {1, 2, 3};
+uint8_t tx_buffer[3] = {4, 5, 6};
 uint8_t rx_buffer[3];
 
 void delay(void) {
@@ -120,10 +120,11 @@ int main(void)
 	GPIO_Init(&GPIO_SPI1);
 
 	/* SPI1_SS */
-	GPIO_SPI1.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
+	GPIO_SPI1.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
 	GPIO_SPI1.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
-	GPIO_SPI1.GPIO_PinConfig.GPIO_PinPuPdCtrl = GPIO_PIN_PD;
+	GPIO_SPI1.GPIO_PinConfig.GPIO_PinPuPdCtrl = GPIO_NO_PU_PD;
 	GPIO_SPI1.GPIO_PinConfig.GPIO_PinOutputType = GPIO_OUT_PUSHPULL;
+	GPIO_SPI1.GPIO_PinConfig.GPIO_PinAltFuncMode = GPIO_ALTFUNC_5;
 	GPIO_SPI1.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_4;
 	GPIO_Init(&GPIO_SPI1);
 
@@ -133,7 +134,7 @@ int main(void)
 
 	SPI1_Handle.SPIx = SPI1;
 	SPI1_Handle.SPIConfig.SPI_DeviceMode = SPI_MODE_MASTER;
-	SPI1_Handle.SPIConfig.SPI_BusConfig = SPI_BUS_HDUPLEX;
+	SPI1_Handle.SPIConfig.SPI_BusConfig = SPI_BUS_FDUPLEX;
 	SPI1_Handle.SPIConfig.SPI_ClkSpeed = SPI_CLOCK_SPEED_DIV_8;
 	SPI1_Handle.SPIConfig.SPI_DFF = SPI_DATA_FRAME_8;
 	SPI1_Handle.SPIConfig.SPI_CPOL = SPI_CPOL_LOW;
@@ -141,7 +142,7 @@ int main(void)
 	SPI1_Handle.SPIConfig.SPI_SSM = SPI_SSM_EN;
 
 	SPI_Init(&SPI1_Handle);
-	SPI_PeripheralControl(SPI1_Handle.SPIx, ENABLE);
+
 
 	/*
 	 * SPI2_SS		-	B9
@@ -150,30 +151,50 @@ int main(void)
 	 * SPI2_MOSI	-	B15
 	 */
 
-	/* 1. Configure GPIO for SPI1 */
+	/* 1. Configure GPIO for SPI2 */
 	GPIO_Handle_t GPIO_SPI2;
 	memset(&GPIO_SPI2, 0, sizeof(GPIO_SPI2));
 
 	GPIO_SPI2.pGPIO = GPIOB;
+//	GPIO_SPI2.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
+//	GPIO_SPI2.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+//	GPIO_SPI2.GPIO_PinConfig.GPIO_PinPuPdCtrl = GPIO_NO_PU_PD;
+//	GPIO_SPI2.GPIO_PinConfig.GPIO_PinOutputType = GPIO_OUT_PUSHPULL;
+//	GPIO_SPI2.GPIO_PinConfig.GPIO_PinAltFuncMode = GPIO_ALTFUNC_5;
+
+	/* SPI2_SS */
 	GPIO_SPI2.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
 	GPIO_SPI2.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
 	GPIO_SPI2.GPIO_PinConfig.GPIO_PinPuPdCtrl = GPIO_NO_PU_PD;
 	GPIO_SPI2.GPIO_PinConfig.GPIO_PinOutputType = GPIO_OUT_PUSHPULL;
 	GPIO_SPI2.GPIO_PinConfig.GPIO_PinAltFuncMode = GPIO_ALTFUNC_5;
-
-	/* SPI2_SS */
 	GPIO_SPI2.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_9;
 	GPIO_Init(&GPIO_SPI2);
 
 	/* SPI2_CLK */
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinPuPdCtrl = GPIO_NO_PU_PD;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinOutputType = GPIO_OUT_PUSHPULL;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinAltFuncMode = GPIO_ALTFUNC_5;
 	GPIO_SPI2.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_10;
 	GPIO_Init(&GPIO_SPI2);
 
 	/* SPI2_MISO */
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinPuPdCtrl = GPIO_NO_PU_PD;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinOutputType = GPIO_OUT_PUSHPULL;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinAltFuncMode = GPIO_ALTFUNC_5;
 	GPIO_SPI2.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_14;
 	GPIO_Init(&GPIO_SPI2);
 
 	/* SPI2_MOSI */
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinPuPdCtrl = GPIO_NO_PU_PD;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinOutputType = GPIO_OUT_PUSHPULL;
+	GPIO_SPI2.GPIO_PinConfig.GPIO_PinAltFuncMode = GPIO_ALTFUNC_5;
 	GPIO_SPI2.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_15;
 	GPIO_Init(&GPIO_SPI2);
 
@@ -188,13 +209,21 @@ int main(void)
 	SPI2_Handle.SPIConfig.SPI_DFF = SPI_DATA_FRAME_8;
 	SPI2_Handle.SPIConfig.SPI_CPOL = SPI_CPOL_LOW;
 	SPI2_Handle.SPIConfig.SPI_CPHA = SPI_CPHA_LOW;
-	SPI2_Handle.SPIConfig.SPI_SSM = SPI_SSM_DIS;
+	SPI2_Handle.SPIConfig.SPI_SSM = SPI_SSM_EN;
 
 	SPI_Init(&SPI2_Handle);
-	SPI_PeripheralControl(SPI2_Handle.SPIx, ENABLE);
+
+	/*send dummy byte*/
+	SPI_PeripheralControl(SPI2, ENABLE);
+	SPI2->CR1 &= ~(1<<8);
+	uint8_t dummySendByte = 0xAA;
+	SPI_Transmit(SPI2, &dummySendByte, 1);
+	SPI2->CR1 |= (1<<8);
+	SPI_PeripheralControl(SPI2, DISABLE);
+//	SPI_PeripheralControl(SPI2_Handle.SPIx, ENABLE);
 
 
-	GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_RESET);
+//	GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_RESET);
     /* Loop forever */
 //	for(;;);
 //	uint8_t btn_status = 1;
@@ -211,11 +240,20 @@ int main(void)
 			delay();
 			GPIO_WriteOutputPin(GPIO_LED.pGPIO, GPIO_PIN_NO_13, GPIO_PIN_RESET);
 
-			GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_RESET);
-			SPI_Transmit(SPI1, tx_buffer, 1);
+//			GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_RESET);
+			SPI_PeripheralControl(SPI1, ENABLE);
+			SPI_PeripheralControl(SPI2, ENABLE);
 
-//			SPI_Receive(SPI2, rx_buffer, 1);
-			GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_SET);
+			SPI_Transmit(SPI1, tx_buffer, 3);
+
+
+
+			SPI2->CR1 &= ~(1<<8);
+			SPI_Receive(SPI2, rx_buffer, 3);
+			SPI2->CR1 |= (1<<8);
+			SPI_PeripheralControl(SPI2, DISABLE);
+			SPI_PeripheralControl(SPI1, DISABLE);
+//			GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_SET);
 			btn_status=1;
 		} else {
 			GPIO_WriteOutputPin(GPIO_LED.pGPIO, GPIO_PIN_NO_13, GPIO_PIN_SET);
