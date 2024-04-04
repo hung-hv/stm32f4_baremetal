@@ -33,7 +33,16 @@
 int8_t btn_status = 1;
 
 uint8_t tx_buffer[3] = {4, 5, 6};
-uint8_t rx_buffer[3];
+uint8_t tx_data = 0;
+uint8_t rx_data = 0;
+uint8_t rx_buffer[10] = {0};
+uint8_t arrayIndex = 0;
+uint8_t spi2_txBuffer[3] = {7,8,9};
+
+int byteTxCounter = 0;
+
+SPI_Handle_t SPI1_Handle;
+SPI_Handle_t SPI2_Handle;
 
 void delay(void) {
 	for (uint32_t i =0; i < 500000; i++) {
@@ -120,16 +129,16 @@ int main(void)
 	GPIO_Init(&GPIO_SPI1);
 
 	/* SPI1_SS */
-	GPIO_SPI1.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
+	GPIO_SPI1.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
 	GPIO_SPI1.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
-	GPIO_SPI1.GPIO_PinConfig.GPIO_PinPuPdCtrl = GPIO_NO_PU_PD;
+	GPIO_SPI1.GPIO_PinConfig.GPIO_PinPuPdCtrl = GPIO_PIN_PU;
 	GPIO_SPI1.GPIO_PinConfig.GPIO_PinOutputType = GPIO_OUT_PUSHPULL;
-	GPIO_SPI1.GPIO_PinConfig.GPIO_PinAltFuncMode = GPIO_ALTFUNC_5;
+//	GPIO_SPI1.GPIO_PinConfig.GPIO_PinAltFuncMode = GPIO_ALTFUNC_5;
 	GPIO_SPI1.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_4;
 	GPIO_Init(&GPIO_SPI1);
 
 	/* 2. Configure SPI1 properties */
-	SPI_Handle_t SPI1_Handle;
+//	SPI_Handle_t SPI1_Handle;
 	memset(&SPI1_Handle, 0, sizeof(SPI1_Handle));
 
 	SPI1_Handle.SPIx = SPI1;
@@ -199,7 +208,7 @@ int main(void)
 	GPIO_Init(&GPIO_SPI2);
 
 	/* 2. Configure SPI1 properties */
-	SPI_Handle_t SPI2_Handle;
+//	SPI_Handle_t SPI2_Handle;
 	memset(&SPI2_Handle, 0, sizeof(SPI2_Handle));
 
 	SPI2_Handle.SPIx = SPI2;
@@ -209,21 +218,23 @@ int main(void)
 	SPI2_Handle.SPIConfig.SPI_DFF = SPI_DATA_FRAME_8;
 	SPI2_Handle.SPIConfig.SPI_CPOL = SPI_CPOL_LOW;
 	SPI2_Handle.SPIConfig.SPI_CPHA = SPI_CPHA_LOW;
-	SPI2_Handle.SPIConfig.SPI_SSM = SPI_SSM_EN;
+	SPI2_Handle.SPIConfig.SPI_SSM = SPI_SSM_DIS;
 
 	SPI_Init(&SPI2_Handle);
 
+	SPI_Receive_IT (&SPI2_Handle, &rx_data, 1);
+
 	/*send dummy byte*/
-	SPI_PeripheralControl(SPI2, ENABLE);
-	SPI2->CR1 &= ~(1<<8);
-	uint8_t dummySendByte = 0xAA;
-	SPI_Transmit(SPI2, &dummySendByte, 1);
-	SPI2->CR1 |= (1<<8);
-	SPI_PeripheralControl(SPI2, DISABLE);
+//	SPI_PeripheralControl(SPI2, ENABLE);
+//	SPI2->CR1 &= ~(1<<8);
+//	uint8_t dummySendByte = 0xAA;
+//	SPI_Transmit(SPI2, &dummySendByte, 1);
+//	SPI2->CR1 |= (1<<8);
+//	SPI_PeripheralControl(SPI2, DISABLE);
 //	SPI_PeripheralControl(SPI2_Handle.SPIx, ENABLE);
 
 
-//	GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_RESET);
+	GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_SET);
     /* Loop forever */
 //	for(;;);
 //	uint8_t btn_status = 1;
@@ -240,20 +251,25 @@ int main(void)
 			delay();
 			GPIO_WriteOutputPin(GPIO_LED.pGPIO, GPIO_PIN_NO_13, GPIO_PIN_RESET);
 
-//			GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_RESET);
+			GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_RESET);
 			SPI_PeripheralControl(SPI1, ENABLE);
 			SPI_PeripheralControl(SPI2, ENABLE);
 
-			SPI_Transmit(SPI1, tx_buffer, 3);
+//			SPI2->CR1 &= ~(1<<8);
+			SPI_Transmit(SPI1, &tx_data, 1);
+			tx_data++;
 
 
 
-			SPI2->CR1 &= ~(1<<8);
-			SPI_Receive(SPI2, rx_buffer, 3);
-			SPI2->CR1 |= (1<<8);
+//			SPI_Transmit(SPI2, spi2_txBuffer, 3);
+//			SPI_Receive(SPI2, rx_buffer, 1);
+
+//			SPI_Transmit(SPI2, spi2_txBuffer, 3);
+//			SPI2->CR1 |= (1<<8);
+
 			SPI_PeripheralControl(SPI2, DISABLE);
 			SPI_PeripheralControl(SPI1, DISABLE);
-//			GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_SET);
+			GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_SET);
 			btn_status=1;
 		} else {
 			GPIO_WriteOutputPin(GPIO_LED.pGPIO, GPIO_PIN_NO_13, GPIO_PIN_SET);
@@ -266,4 +282,31 @@ int main(void)
 void EXTI0_IRQHandler(void) {
 	GPIO_IRQHandling(GPIO_PIN_NO_0);
 	btn_status = -1;
+}
+
+void SPI1_IRQHandler(void) {
+	/* transmit on SPI 1 */
+	SPI_ISR_Handler(&SPI1_Handle);
+}
+
+void SPI2_IRQHandler(void) {
+	/* transmit on SPI 1 */
+	SPI_ISR_Handler(&SPI2_Handle);
+}
+
+
+
+void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIhandle, uint8_t event) {
+	/* check SPI1 transmit */
+	if ( pSPIhandle == &SPI1_Handle ) {
+		byteTxCounter++;
+	}
+	if ( pSPIhandle == &SPI2_Handle ) {
+		if (event == SPI_EVENT_RX_CMPLT) {
+//			uint8_t rx_data = 0;
+			SPI_Receive_IT (pSPIhandle, &rx_data, 1);
+			rx_buffer[arrayIndex] = rx_data;
+			arrayIndex++;
+		}
+	}
 }

@@ -108,6 +108,8 @@ uint8_t SPI_Transmit(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t len) {
 
 uint8_t SPI_Receive(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t len) {
 	while (len > 0) {
+			/* 0. Send dummy byte 0xAA */
+//			pSPIx->DR = 0xAA;
 			/* 1. wait for Rx buffer has data (not empty) */
 			while (SPI_GetFlagStatus(pSPIx, SPI_RXNE_FLAG) == FLAG_CLEAR);
 
@@ -119,8 +121,11 @@ uint8_t SPI_Receive(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t len) {
 				len--;
 				(uint16_t*)pRxBuffer++;
 			} else {
+				/* send dummy byte */
+//				*(volatile uint8_t *)&pSPIx->DR = 0xAA;
+				pSPIx->DR = 0xAA;
 				/* 8 bit frame */
-				*pRxBuffer = *(volatile uint8_t *)&pSPIx->DR;
+				*pRxBuffer = *((volatile uint8_t *)&pSPIx->DR);
 				len--;
 				pRxBuffer++;
 			}
@@ -242,6 +247,9 @@ static void SPI_RXNE_isr_handler(SPI_Handle_t *pSPIhandle) {
 		pSPIhandle->pRxBuffer++;
 	} else {
 		/* 8 bit frame */
+		/*dummy byte 0xAA send*/
+		pSPIhandle->SPIx->DR = 0xAA;
+		/*collect data*/
 		*(pSPIhandle->pRxBuffer) = pSPIhandle->SPIx->DR;
 		pSPIhandle->RxLength--;
 		pSPIhandle->pRxBuffer++;
