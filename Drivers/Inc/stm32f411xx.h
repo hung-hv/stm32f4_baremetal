@@ -226,7 +226,7 @@ typedef struct {
 
 /*
  * @IRQNumber
- * IRQ (Interrupt Request) number
+ * IRQ (Interrupt Request) EXTI number
  */
 #define IRQ_NO_EXTI0			6
 #define IRQ_NO_EXTI1			7
@@ -235,6 +235,11 @@ typedef struct {
 #define IRQ_NO_EXTI4			10
 #define IRQ_NO_EXTI9_5			23
 #define IRQ_NO_EXTI15_10		40
+/*
+ * IRQ (Interrupt Request) SPI number
+ */
+#define IRQ_NO_SPI1				35
+#define IRQ_NO_SPI2				36
 
 /*
  * @IRQPriority
@@ -242,6 +247,7 @@ typedef struct {
  */
 #define IRQ_PRIO_0			0
 #define IRQ_PRIO_1			1
+#define IRQ_PRIO_2			2
 #define IRQ_PRIO_3			3
 #define IRQ_PRIO_15			15
 

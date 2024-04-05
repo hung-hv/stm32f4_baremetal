@@ -134,6 +134,8 @@ uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t Flag);
 uint8_t SPI_Transmit_IT(SPI_Handle_t *pSPIhandle, uint8_t *pTxBuffer, uint32_t len);
 uint8_t SPI_Receive_IT(SPI_Handle_t *pSPIhandle, uint8_t *pRxBuffer, uint32_t len);
 
+void SPI_IRQ_ISR_Config(uint8_t IRQNumber, uint8_t state);
+void SPI_IRQ_PRIO_Config(uint8_t IRQNumber, uint8_t IRQPriority);
 void SPI_ISR_Handler(SPI_Handle_t *pSPIhandle);
 
 void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t state);
@@ -141,6 +143,6 @@ void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t state);
 /*
  *	Application Callback
  */
-__attribute__((weak)) void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIhandle, uint8_t event);
+void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIhandle, uint8_t event);
 
 #endif /* INC_STM32F411XX_SPI_DRIVER_H_ */

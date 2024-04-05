@@ -286,6 +286,40 @@ void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t state) {
 	}
 }
 
+void SPI_IRQ_ISR_Config(uint8_t IRQNumber, uint8_t state) {
+	if ( state == ENABLE) {
+		/* Enable interrupt */
+		if ( IRQNumber <= 31 ) {
+			*NVIC_ISER0 |= ( 1 << IRQNumber );
+		} else if ( IRQNumber > 31 && IRQNumber < 64) {
+			*NVIC_ISER1 |= ( 1 << (IRQNumber % 32) );
+		} else if ( IRQNumber >= 64 && IRQNumber < 96) {
+			*NVIC_ISER2 |= ( 1 << (IRQNumber % 64) );
+		}
+	} else {
+		/* Disable interrupt*/
+		if ( IRQNumber <= 31 ) {
+			*NVIC_ICER0 |= ( 1 << IRQNumber );
+		} else if ( IRQNumber > 31 && IRQNumber < 64) {
+			*NVIC_ICER1 |= ( 1 << (IRQNumber % 32) );
+		} else if ( IRQNumber >= 64 && IRQNumber < 96) {
+			*NVIC_ICER2 |= ( 1 << (IRQNumber % 64) );
+		}
+	}
+}
+
+void SPI_IRQ_PRIO_Config(uint8_t IRQNumber, uint8_t IRQPriority) {
+	uint8_t reg_index = 0; /* 0 - 59 */
+	uint8_t reg_order = 0; /* 0 - 3 */
+
+	reg_index = IRQNumber / 4;
+	reg_order = IRQNumber % 4;
+	/* clear bit first */
+	*( NVIC_IPR_BASEADDR + reg_index ) &= ~( 0xF << (reg_order*8 + 4) );
+	/* then set bit */
+	*( NVIC_IPR_BASEADDR + reg_index ) |= ( IRQPriority << (reg_order*8 + 4) );
+}
+
 __attribute__((weak)) void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIhandle, uint8_t event) {
 
 }

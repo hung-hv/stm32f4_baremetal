@@ -10,4 +10,6 @@
 ../Drivers/Src/stm32f411xx_SPI_driver.c:239:13:SPI_RXNE_isr_handler	3
 ../Drivers/Src/stm32f411xx_SPI_driver.c:267:13:SPI_OVR_isr_handler	2
 ../Drivers/Src/stm32f411xx_SPI_driver.c:281:6:SPI_PeripheralControl	2
-../Drivers/Src/stm32f411xx_SPI_driver.c:289:28:SPI_ApplicationEventCallback	1
+../Drivers/Src/stm32f411xx_SPI_driver.c:289:6:SPI_IRQ_ISR_Config	12
+../Drivers/Src/stm32f411xx_SPI_driver.c:311:6:SPI_IRQ_PRIO_Config	1
+../Drivers/Src/stm32f411xx_SPI_driver.c:323:28:SPI_ApplicationEventCallback	1

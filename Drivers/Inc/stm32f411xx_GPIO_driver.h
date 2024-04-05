@@ -112,7 +112,6 @@ void GPIO_TogglePin(GPIO_RegDef_t *pGPIO, uint8_t PinNumber);
 
 
 void GPIO_IRQ_ISR_Config(uint8_t IRQNumber, uint8_t state);
-
 void GPIO_IRQ_PRIO_Config(uint8_t IRQNumber, uint8_t IRQPriority);
 
 void GPIO_IRQHandling(uint8_t PinNumber);

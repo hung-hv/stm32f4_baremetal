@@ -35,7 +35,7 @@ int8_t btn_status = 1;
 uint8_t tx_buffer[3] = {4, 5, 6};
 uint8_t tx_data = 0;
 uint8_t rx_data = 0;
-uint8_t rx_buffer[10] = {0};
+uint8_t rx_buffer[10];
 uint8_t arrayIndex = 0;
 uint8_t spi2_txBuffer[3] = {7,8,9};
 
@@ -221,6 +221,8 @@ int main(void)
 	SPI2_Handle.SPIConfig.SPI_SSM = SPI_SSM_DIS;
 
 	SPI_Init(&SPI2_Handle);
+	SPI_IRQ_PRIO_Config(IRQ_NO_SPI2, IRQ_PRIO_2);
+	SPI_IRQ_ISR_Config(IRQ_NO_SPI2, ENABLE);
 
 	SPI_Receive_IT (&SPI2_Handle, &rx_data, 1);
 
@@ -232,9 +234,12 @@ int main(void)
 //	SPI2->CR1 |= (1<<8);
 //	SPI_PeripheralControl(SPI2, DISABLE);
 //	SPI_PeripheralControl(SPI2_Handle.SPIx, ENABLE);
-
+	byteTxCounter = 0;
 
 	GPIO_WriteOutputPin(GPIO_SPI1.pGPIO, GPIO_PIN_NO_4, GPIO_PIN_SET);
+	for (int i= 0; i< 10; i++) {
+		rx_buffer[i] = 0;
+	}
     /* Loop forever */
 //	for(;;);
 //	uint8_t btn_status = 1;
@@ -256,7 +261,8 @@ int main(void)
 			SPI_PeripheralControl(SPI2, ENABLE);
 
 //			SPI2->CR1 &= ~(1<<8);
-			SPI_Transmit(SPI1, &tx_data, 1);
+			SPI_Transmit(SPI1, tx_buffer, 3);
+//			SPI_Receive_IT (&SPI2_Handle, &rx_data, 1);
 			tx_data++;
 
 
@@ -291,6 +297,7 @@ void SPI1_IRQHandler(void) {
 
 void SPI2_IRQHandler(void) {
 	/* transmit on SPI 1 */
+//	byteTxCounter++;
 	SPI_ISR_Handler(&SPI2_Handle);
 }
 
@@ -298,10 +305,12 @@ void SPI2_IRQHandler(void) {
 
 void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIhandle, uint8_t event) {
 	/* check SPI1 transmit */
-	if ( pSPIhandle == &SPI1_Handle ) {
-		byteTxCounter++;
-	}
+//	if ( pSPIhandle == &SPI1_Handle ) {
+////		byteTxCounter++;
+//	}
+
 	if ( pSPIhandle == &SPI2_Handle ) {
+		byteTxCounter++;
 		if (event == SPI_EVENT_RX_CMPLT) {
 //			uint8_t rx_data = 0;
 			SPI_Receive_IT (pSPIhandle, &rx_data, 1);
